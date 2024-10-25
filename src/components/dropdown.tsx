@@ -16,26 +16,31 @@ type Option = {
 
 interface EditableDropdownProps {
   onChange: (newSetlistIndex: number) => void;
-  onDelete: (newSetlistIndex: number) => void;
-  current: number;
+  setlistIndex: number;
 }
 
 const EditableDropdown: React.FC<EditableDropdownProps> = ({
   onChange,
-  current,
-  onDelete,
+  setlistIndex,
 }) => {
-  const [options, setOptions] = useState<Option[]>([
-    { id: 1, label: "Setlist 1" },
-  ]);
-  const [newLabel, setNewLabel] = useState<string>("");
-  const [newOptionLabel, setNewOptionLabel] = useState<string>("");
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [isAdding, setIsAdding] = useState<boolean>(false);
+  const [options, setOptions] = useState<Option[]>(() => {
+    const savedOptions = localStorage.getItem("setlists");
+    return savedOptions
+      ? JSON.parse(savedOptions)
+      : [
+          { id: 1, label: "Setlist 1" },
+          { id: 2, label: "Setlist 2" },
+          { id: 3, label: "Setlist 3" },
+        ];
+  });
 
+  const [newLabel, setNewLabel] = useState<string>("");
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const textFieldRef = useRef<HTMLInputElement>(null);
-  const newSetlistFieldRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    localStorage.setItem("setlists", JSON.stringify(options));
+  }, [options]);
 
   useEffect(() => {
     if (isEditing && textFieldRef.current) {
@@ -44,35 +49,20 @@ const EditableDropdown: React.FC<EditableDropdownProps> = ({
     }
   }, [isEditing]);
 
-  useEffect(() => {
-    if (isAdding && newSetlistFieldRef.current) {
-      newSetlistFieldRef.current.focus();
-    }
-  }, [isAdding]);
-
   const handleEdit = (): void => {
     setIsEditing(true);
-    setNewLabel(options[current].label);
-  };
-
-  const handleDelete = (index: number): void => {
-    if (options.length === 1) {
-      return;
-    }
-
-    onDelete(index);
-    setOptions(options.filter((_, i) => i !== index));
+    setNewLabel(options[setlistIndex].label);
   };
 
   const handleUpdate = (): void => {
     const hasSameLabel = options.some(
-      () => options[currentIndex].label === newLabel
+      () => options[setlistIndex].label === newLabel
     );
     if (newLabel === "" || hasSameLabel) return;
 
     setOptions(
       options.map((opt) =>
-        opt.id === currentIndex + 1
+        opt.id === setlistIndex + 1
           ? {
               ...opt,
               label: newLabel,
@@ -84,135 +74,68 @@ const EditableDropdown: React.FC<EditableDropdownProps> = ({
     setIsEditing(false);
   };
 
-  const handleAddOption = (): void => {
-    if (newOptionLabel === "") return;
-    setIsAdding(false);
-    if (newOptionLabel.trim()) {
-      const newOption: Option = {
-        id: options.length > 0 ? options[options.length - 1].id + 1 : 1,
-        label: newOptionLabel,
-      };
-      setOptions([...options, newOption]);
-      setNewOptionLabel("");
-    }
-  };
-
   const handleSelectChange = (event: SelectChangeEvent<number>) => {
     const selectedSetlist = parseInt(event.target.value as string, 10);
-    setCurrentIndex(selectedSetlist);
     onChange(selectedSetlist);
   };
 
   return (
-    <div className="flex gap-3 w-2/3 items-end">
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Setlist</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={current}
-          label="Setlist 1"
-          onChange={handleSelectChange}
-        >
-          {options.map((option, index) => (
-            <MenuItem key={option.id} value={index}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <div>
-        {isEditing && !isAdding && (
-          <div className="flex gap-3 items-end">
-            <TextField
-              value={newLabel}
-              onChange={(e) => setNewLabel(e.target.value)}
-              inputRef={textFieldRef}
-              sx={{ background: "#fff", width: 200 }}
-            />
-            <Button
-              variant="contained"
-              sx={{ height: 40, width: 120 }}
-              onClick={handleUpdate}
-            >
-              Update
-            </Button>
-            <Button
-              color="error"
-              variant="contained"
-              sx={{ height: 40, width: 120 }}
-              onClick={() => setIsEditing(false)}
-            >
-              Cancel
-            </Button>
-          </div>
-        )}
-
-        {!isEditing && !isAdding && (
-          <div className="flex gap-3 items-end">
-            <Button
-              variant="contained"
-              disabled={isAdding}
-              sx={{ height: 40 }}
-              onClick={handleEdit}
-            >
-              Edit
-            </Button>
-            <Button
-              disabled={options.length === 1 || isAdding}
-              color="error"
-              variant="contained"
-              sx={{ height: 40 }}
-              onClick={() => handleDelete(currentIndex)}
-            >
-              Delete
-            </Button>
-          </div>
-        )}
-      </div>
-
-      <div>
-        {isAdding && !isEditing && (
-          <div className="flex gap-3 items-center">
-            <TextField
-              value={newOptionLabel}
-              onChange={(e) => setNewOptionLabel(e.target.value)}
-              placeholder="New Setlist"
-              inputRef={newSetlistFieldRef}
-              sx={{ height: 40 }}
-            />
-            <Button
-              color="success"
-              variant="contained"
-              disabled={newOptionLabel === ""}
-              sx={{ height: 40 }}
-              onClick={handleAddOption}
-            >
-              Submit
-            </Button>
-            <Button
-              color="error"
-              variant="contained"
-              sx={{ height: 40 }}
-              onClick={() => setIsAdding(false)}
-            >
-              Cancel
-            </Button>
-          </div>
-        )}
-        {!isAdding && !isEditing && (
-          <div className="flex gap-3 items-center">
-            <Button
-              color="success"
-              variant="contained"
-              disabled={isEditing || options.length >= 5}
-              sx={{ height: 40, width: 150 }}
-              onClick={() => setIsAdding(true)}
-            >
-              Add SetList
-            </Button>
-          </div>
-        )}
+    <div className="flex">
+      <div className="flex gap-3">
+        <FormControl sx={{ width: 200, background: "#fff" }}>
+          <InputLabel id="demo-simple-select-label">Setlist</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={setlistIndex}
+            label="Setlist 1"
+            onChange={handleSelectChange}
+          >
+            {options.map((option, index) => (
+              <MenuItem key={option.id} value={index}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <div>
+          {isEditing && (
+            <div className="flex gap-3 items-end">
+              <TextField
+                value={newLabel}
+                onChange={(e) => setNewLabel(e.target.value)}
+                inputRef={textFieldRef}
+                sx={{ background: "#fff", width: 200 }}
+              />
+              <Button
+                variant="contained"
+                sx={{ height: 40, width: 120 }}
+                onClick={handleUpdate}
+              >
+                Update
+              </Button>
+              <Button
+                color="error"
+                variant="contained"
+                sx={{ height: 40, width: 120 }}
+                onClick={() => setIsEditing(false)}
+              >
+                Cancel
+              </Button>
+            </div>
+          )}
+          {!isEditing && (
+            <div className="flex gap-3 items-center mt-[14px]">
+              <Button
+                variant="contained"
+                sx={{ height: 40 }}
+                onClick={handleEdit}
+              >
+                Edit
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
