@@ -13,6 +13,7 @@ interface SonglistProps {
 }
 const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
   const [songs, setSongs] = useState<Set[][]>(InitializedSetlists);
+  const [showTracks, setShowTracks] = useState(true);
 
   useEffect(() => {
     const savedSongs = localStorage.getItem("songs");
@@ -229,10 +230,13 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
   const handleSongCompletion = (index: number) => () => {
     setSongs((prevSongs) => {
       const updatedSetlists = [...prevSongs];
-      updatedSetlists[setlistIndex] = updatedSetlists[setlistIndex].map(
-        (song, i) =>
-          i === index ? { ...song, isComplete: !song.isComplete } : song
+      const updatedSongs = updatedSetlists[setlistIndex].map((song, i) =>
+        i === index ? { ...song, isComplete: !song.isComplete } : song
       );
+      const incompleteSongs = updatedSongs.filter((song) => !song.isComplete);
+      const completedSongs = updatedSongs.filter((song) => song.isComplete);
+      updatedSetlists[setlistIndex] = [...incompleteSongs, ...completedSongs];
+
       return updatedSetlists;
     });
   };
@@ -250,7 +254,7 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
   const currentSetlist = songs[setlistIndex] || [];
 
   return (
-    <>
+    <div className="border-2 border-stone-950 px-3 rounded-xl my-3 py-3 bg-gray-400">
       {songs[setlistIndex] && (
         <Reorder.Group
           values={currentSetlist}
@@ -266,18 +270,19 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
               animate={{
                 y: 0,
                 opacity: 1,
+                // width: "100%",
               }}
               transition={{
                 type: "spring",
                 stiffness: 400,
-                damping: 15,
+                damping: 80,
                 duration: 0.3,
                 delay: index * 0.1,
-                ease: "easeInOut",
+                ease: "easeIn",
               }}
               value={song}
               style={song.isComplete ? { opacity: 0.4 } : { opacity: 1 }}
-              className="flex flex-col gap-3 mb-5 border border-black p-3 my-3 rounded-lg bg-stone-950"
+              className="flex flex-col gap-2 mb-2 border border-stone-500 p-3 my-1 rounded-lg bg-stone-950 cursor-grab"
               key={song.id}
             >
               <div className="flex gap-3 items-center">
@@ -317,7 +322,7 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
                   <div className="border border-red-600 rounded p-2 flex gap-3">
                     <h4 className="text-white">Delete</h4>
                     <button
-                      className="focus:outline-none text-white bg-rose-700 hover:bg-rose-800 focus:ring-4 focus:ring-rose-300 font-medium rounded-lg text-sm px-2 dark:bg-rose-600 dark:hover:bg-rose-700 dark:focus:ring-rose-900"
+                      className="focus:outline-none text-white bg-rose-700 hover:bg-rose-800 focus:ring-4 focus:ring-rose-300 font-medium rounded-lg text-sm px-2"
                       onClick={() => deleteSong(song.id)}
                     >
                       &times;
@@ -325,98 +330,110 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
                   </div>
                 </div>
               </div>
-              <div className="flex gap-3 justify-around">
-                {song.tracks.map((track, i) => (
-                  <div
-                    className=" flex flex-col gap-1 border border-cyan-200 rounded"
-                    key={track.id}
-                  >
-                    <h3>
-                      <div className="flex gap-1">
-                        <div className="text-white">{`TR${i + 1}`}</div>
-                        <input
-                          style={{ maxWidth: "180px" }}
-                          type="text"
-                          className="pl-1"
-                          placeholder={track.placeholder}
-                          value={track.title}
-                          onChange={(e) =>
-                            editTrack(song.id, track.id, {
-                              title: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                    </h3>
-                    {track.loops.map((loop) => (
-                      <div className="flex  flex-col gap-1" key={loop.id}>
-                        <div className="flex">
+              <div className="flex justify-around">
+                {showTracks &&
+                  song.tracks.map((track, i) => (
+                    <div
+                      className=" flex flex-col gap-1 border border-stone-300 p-[2px] rounded"
+                      key={track.id}
+                    >
+                      <h3>
+                        <div className="flex gap-1">
+                          <div className="text-white">{`TR${i + 1}`}</div>
                           <input
-                            style={{ maxWidth: "180px" }}
+                            style={{ maxWidth: "200px" }}
                             type="text"
                             className="pl-1"
-                            placeholder={loop.placeholder}
-                            value={loop.title}
+                            placeholder={track.placeholder}
+                            value={track.title}
                             onChange={(e) =>
-                              editLoop(song.id, track.id, loop.id, {
+                              editTrack(song.id, track.id, {
                                 title: e.target.value,
                               })
                             }
                           />
-                          <button
-                            className="focus:outline-none text-white bg-rose-700 hover:bg-rose-800 focus:ring-4 focus:ring-rose-300 font-medium rounded-lg text-sm px-2 dark:bg-rose-600 dark:hover:bg-rose-700 dark:focus:ring-rose-900"
-                            onClick={() => deleteLoop(loop.id)}
-                          >
-                            &times;
-                          </button>
                         </div>
-                        <textarea
-                          style={{ width: "auto" }}
-                          rows={2}
-                          cols={20}
-                          placeholder="Enter Notes"
-                          value={loop.notes}
-                          onChange={(e) =>
-                            editLoop(song.id, track.id, loop.id, {
-                              notes: e.target.value,
-                            })
-                          }
-                        />
-                        <FileUpload
-                          setlistIndex={setlistIndex}
-                          trackId={track.id}
-                          loopId={loop.id}
-                          onFileUpload={updateLoopFile}
-                          savedFile={loop?.file}
-                        />
-                      </div>
-                    ))}
-                    {track.loops.length < 5 && (
-                      <button
-                        onClick={handleAddLoop(track.id, index)}
-                        className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900"
-                      >
-                        +
-                      </button>
-                    )}
-                  </div>
-                ))}
+                      </h3>
+                      {track.loops.map((loop) => (
+                        <div className="flex flex-col gap-1" key={loop.id}>
+                          <div className="flex">
+                            <input
+                              style={{ maxWidth: "190px" }}
+                              type="text"
+                              className="pl-1"
+                              placeholder={loop.placeholder}
+                              value={loop.title}
+                              onChange={(e) =>
+                                editLoop(song.id, track.id, loop.id, {
+                                  title: e.target.value,
+                                })
+                              }
+                            />
+                            <button
+                              className="focus:outline-none text-white bg-rose-700 hover:bg-rose-800 focus:ring-4 focus:ring-rose-300 font-medium rounded-lg text-sm px-2 dark:bg-rose-600 dark:hover:bg-rose-700 dark:focus:ring-rose-900"
+                              onClick={() => deleteLoop(loop.id)}
+                            >
+                              &times;
+                            </button>
+                          </div>
+                          <textarea
+                            style={{ width: "auto" }}
+                            rows={2}
+                            cols={20}
+                            placeholder="Enter Notes"
+                            value={loop.notes}
+                            onChange={(e) =>
+                              editLoop(song.id, track.id, loop.id, {
+                                notes: e.target.value,
+                              })
+                            }
+                          />
+                          <FileUpload
+                            setlistIndex={setlistIndex}
+                            trackId={track.id}
+                            loopId={loop.id}
+                            onFileUpload={updateLoopFile}
+                            savedFile={loop?.file}
+                          />
+                        </div>
+                      ))}
+                      {track.loops.length < 5 && (
+                        <button
+                          onClick={handleAddLoop(track.id, index)}
+                          className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900"
+                        >
+                          + Add loop
+                        </button>
+                      )}
+                    </div>
+                  ))}
               </div>
             </Reorder.Item>
           ))}
         </Reorder.Group>
       )}
-      <div className="flex justify-between">
+      <div className="flex justify-between mx-3">
         <Button variant="contained" color="success" onClick={addNewSong}>
           + ADD NEW SONG
         </Button>
-        <div>
+
+        <div className="flex gap-8">
+          <div className="rounded p-2 flex gap-3">
+            <h4 className="text-black">
+              {showTracks ? "Hide Tracks" : "Show Tracks"}
+            </h4>
+            <input
+              type="checkbox"
+              checked={!showTracks}
+              onChange={() => setShowTracks(!showTracks)}
+            />
+          </div>
           <Button variant="contained" onClick={saveToLocalStorage}>
             SAVE ALL
           </Button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -82,7 +82,17 @@ const EditableDropdown: React.FC<EditableDropdownProps> = ({
   return (
     <div className="flex">
       <div className="flex gap-3">
-        <FormControl sx={{ width: 200, background: "#fff" }}>
+        {!isEditing && (
+          <div className="flex gap-2 items-center mt-[14px]">
+            <button
+              className="focus:outline-none text-white bg-stone-700 hover:bg-stone-800 focus:ring-4 focus:ring-stone-300 font-lg rounded-lg text-md px-3 py-2"
+              onClick={handleEdit}
+            >
+              Edit
+            </button>
+          </div>
+        )}
+        <FormControl sx={{ width: 300 }}>
           <InputLabel id="demo-simple-select-label">Setlist</InputLabel>
           <Select
             labelId="demo-simple-select-label"
@@ -121,17 +131,6 @@ const EditableDropdown: React.FC<EditableDropdownProps> = ({
                 onClick={() => setIsEditing(false)}
               >
                 Cancel
-              </Button>
-            </div>
-          )}
-          {!isEditing && (
-            <div className="flex gap-3 items-center mt-[14px]">
-              <Button
-                variant="contained"
-                sx={{ height: 40 }}
-                onClick={handleEdit}
-              >
-                Edit
               </Button>
             </div>
           )}

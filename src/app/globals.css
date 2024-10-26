@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Kalam&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Gideon+Roman&family=Kanit:wght@600&family=Martian+Mono:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 148, 163, 184;
@@ -17,7 +22,6 @@
 }
 
 body {
-  /* color: rgb(var(--foreground-rgb)); */
   background: linear-gradient(
       to bottom,
       transparent,
@@ -32,13 +36,52 @@ body {
   }
 }
 
-.nav-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  background: #171223;
-  border-bottom: 2px solid #09090b;
-  margin-bottom: 10px;
-  @apply bg-slate-300 dark:bg-gradient-to-t from-sky-950 from-5% via-slate-900 via-60% to-slate-950 to-90%;
+.info_box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  @apply bg-slate-500 dark:bg-slate-950;
+  padding: 20px;
+  border-radius: 6px;
+  border: 1px solid #fff;
+  transition: height 1.3s ease;
+  max-width: 600px;
+  min-width: 360px;
+  height: fit-content;
+  max-height: 95dvh;
+  overflow-y: auto;
+}
+
+.icon_btn {
+  cursor: pointer;
+  font-size: 24px;
+  @apply text-slate-700 dark:text-slate-200;
+}
+
+.icon_btn:hover {
+  transition: color 0.3s ease-in;
+  @apply text-sky-400 dark:text-sky-300;
+}
+
+.closeIcon:hover {
+  fill: #ccc;
+  transition: 0.3s;
+}
+
+.modal-header {
+  color: #fff;
+  @apply bg-slate-300 dark:bg-gradient-to-r from-slate-600 from-10% to-slate-800 to-80%;
+}
+
+.start_btn {
+  padding: 0.5em 0.7em;
+  font-size: 14px;
+  width: 100px;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-family: "Roboto", cursive;
+  @apply bg-slate-700;
 }

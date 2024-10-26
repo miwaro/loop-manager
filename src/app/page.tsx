@@ -5,6 +5,7 @@ import EditableDropdown from "@/components/dropdown";
 import SongList from "@/components/songList";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Navbar from "@/components/navbar";
 
 export default function Home() {
   const [setlistIndex, setSetlistIndex] = useState(0);
@@ -14,12 +15,9 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col max-w-[1200px] m-auto">
+    <main className="flex min-h-screen flex-col max-w-[1300px] m-auto">
       <ToastContainer />
-      <EditableDropdown
-        onChange={handleSetlistChange}
-        setlistIndex={setlistIndex}
-      />
+      <Navbar onChange={handleSetlistChange} setlistIndex={setlistIndex} />
       <SongList setlistIndex={setlistIndex} />
     </main>
   );
