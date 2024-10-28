@@ -52,17 +52,17 @@ body {
 
 .icon_btn {
   cursor: pointer;
-  font-size: 24px;
+  font-size: 22px;
   @apply text-slate-700 dark:text-slate-200;
 }
 
 .icon_btn:hover {
   transition: color 0.3s ease-in;
-  @apply text-sky-400 dark:text-sky-300;
+  @apply text-emerald-400;
 }
 
 .closeIcon:hover {
-  fill: #ccc;
+  fill: #fff;
   transition: 0.3s;
 }
 
