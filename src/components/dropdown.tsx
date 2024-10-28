@@ -22,16 +22,20 @@ const EditableDropdown: React.FC<EditableDropdownProps> = ({
   onChange,
   setlistIndex,
 }) => {
-  const [options, setOptions] = useState<Option[]>(() => {
-    const savedOptions = localStorage.getItem("setlists");
-    return savedOptions
-      ? JSON.parse(savedOptions)
-      : [
-          { id: 1, label: "Setlist 1" },
-          { id: 2, label: "Setlist 2" },
-          { id: 3, label: "Setlist 3" },
-        ];
-  });
+  const [options, setOptions] = useState<Option[]>([
+    { id: 1, label: "Setlist 1" },
+    { id: 2, label: "Setlist 2" },
+    { id: 3, label: "Setlist 3" },
+  ]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedOptions = localStorage.getItem("setlists");
+      if (savedOptions) {
+        setOptions(JSON.parse(savedOptions));
+      }
+    }
+  }, []);
 
   const [newLabel, setNewLabel] = useState<string>("");
   const [isEditing, setIsEditing] = useState<boolean>(false);

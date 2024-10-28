@@ -32,10 +32,6 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log("songs", songs);
-  }, [songs]);
-
   const deleteSong = (songId: string) => {
     setSongs((prevSongs) => {
       const updatedSetlists = [...prevSongs];
@@ -252,7 +248,6 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
   };
 
   const saveToLocalStorage = () => {
-    console.log("songs", songs);
     try {
       localStorage.setItem("songs", JSON.stringify(songs));
       toast.success("Data saved successfully!");
