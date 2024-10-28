@@ -17,7 +17,7 @@ export default function InfoModal() {
 
   return (
     <>
-      <FaCircleInfo className="icon_btn" onClick={handleOpen} />
+      <FaCircleInfo className="icon_btn mb-6 md:mb-0" onClick={handleOpen} />
       <Modal
         open={open}
         onClose={handleClose}

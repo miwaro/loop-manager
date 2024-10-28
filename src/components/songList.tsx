@@ -361,7 +361,7 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-evenly gap-2">
+                <div className="flex flex-col md:flex-row justify-evenly gap-2">
                   {showTracks &&
                     song.tracks.map((track, i) => (
                       <div

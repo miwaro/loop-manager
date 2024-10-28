@@ -15,7 +15,7 @@ const SetlistActions: React.FC<SetlistActionsProps> = ({
   saveToLocalStorage,
 }) => {
   return (
-    <div className="flex justify-between gap-60 bg-slate-800 rounded-lg p-2 font-medium max-w-[1300px] mx-auto mt-2">
+    <div className="flex justify-between gap-20 md:gap-60 bg-slate-800 rounded-lg p-1 md:p-2 font-small md:font-medium max-w-[1300px] mx-auto mt-2">
       <div>
         <Button
           style={{ backgroundColor: "#10B981", color: "#fff" }}

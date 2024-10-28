@@ -14,13 +14,13 @@ const Navbar: React.FC<EditableDropdownProps> = ({
   setlistIndex,
 }) => {
   return (
-    <div className="flex justify-center gap-60 items-end mt-3 mb-1 mx-1">
+    <div className="flex flex-col md:flex-row justify-center gap-0 md:gap-60 items-end mt-3 mb-1 mx-0 md:mx-1">
       <div className="flex items-end">
-        <h1 className="font-rock3d text-4xl p-2 font-semibold bg-emerald-500 rounded-md border-4 border-indigo-500">
+        <h1 className="font-rock3d text-4xl mb-6 md:mb-0 p-2 font-semibold bg-emerald-500 rounded-md border-4 border-indigo-500">
           Loop-List
         </h1>
 
-        <h3 className="text-stone-950 italic font-medium  mx-3">
+        <h3 className="text-stone-950 italic font-medium  mx-3 mb-6 md:mb-0">
           ...a setlist manager for loop artists
         </h3>
         <InfoModal />
