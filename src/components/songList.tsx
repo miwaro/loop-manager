@@ -340,7 +340,7 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
                       control={
                         <Checkbox
                           onChange={handleSongCompletion(index)}
-                          value={song.isComplete ? "true" : "false"}
+                          checked={song.isComplete}
                           sx={{
                             "& .MuiSvgIcon-root": {
                               fontSize: 36,
