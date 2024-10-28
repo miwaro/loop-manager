@@ -45,7 +45,7 @@ export default function InfoModal() {
             component="h5"
             className="modal-header rounded"
           >
-            <div className="p-2">Welcome!</div>
+            <div className="p-2">Welcome to Loop List!</div>
           </Typography>
           <div style={{ margin: "20px", color: "#fff" }}>
             <p>
@@ -56,7 +56,7 @@ export default function InfoModal() {
           </div>
           <p style={{ display: "flex", gap: "5px", justifyContent: "center" }}>
             <motion.button
-              className="start_btn bg-sky-600 hover:bg-sky-700"
+              className="p-3 rounded-lg border border-white"
               whileTap={{ scale: 0.92 }}
               style={{ padding: "16px", display: "flex" }}
             >
@@ -66,7 +66,8 @@ export default function InfoModal() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                DONATE <FaPaypal />
+                <span className="mr-3">DONATE</span>
+                <FaPaypal />
               </a>
             </motion.button>
           </p>
@@ -76,10 +77,13 @@ export default function InfoModal() {
               but maybe even more importantly, to remember what the heck I did
               in the first place! This app allows you to not only create notes
               for each loop for each track for each song for multiple setlists,
-              but you can also upload documents like tablature or even a video
-              of yourself playing whatever instrument you play so you will
-              always have a reference of what you played. I hope you find it
-              useful!
+              but you can also upload documents like tablature, lyrics, or even
+              a video of yourself playing whatever instrument you play so you
+              will always have a reference of what you played. If you have
+              questions or suggestions for the app feel free to email me at{" "}
+              <a className="underline" href="mailto:mikerooze12@gmail.com">
+                mikerooze12@gmail.com.
+              </a>
             </p>
           </div>
         </Box>

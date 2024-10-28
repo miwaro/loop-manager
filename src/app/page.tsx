@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import EditableDropdown from "@/components/dropdown";
 import SongList from "@/components/songList";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,7 +14,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col max-w-[1300px] m-auto">
+    <main className="flex min-h-screen flex-col m-auto">
       <ToastContainer />
       <Navbar onChange={handleSetlistChange} setlistIndex={setlistIndex} />
       <SongList setlistIndex={setlistIndex} />

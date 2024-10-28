@@ -1,5 +1,9 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect, useRef, ChangeEvent } from "react";
+import { styled } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Modal, Box } from "@mui/material";
+import PreviewIcon from "@mui/icons-material/Preview";
 
 interface FileUploadProps {
   setlistIndex: number;
@@ -14,6 +18,18 @@ interface FileUploadProps {
   savedFile?: string | null;
 }
 
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
+
 const FileUpload: React.FC<FileUploadProps> = ({
   setlistIndex,
   trackId,
@@ -23,6 +39,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
 }) => {
   const [fileUrl, setFileUrl] = useState<string>(savedFile || "");
   const [isPreviewVisible, setIsPreviewVisible] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     setFileUrl(savedFile || "");
@@ -42,6 +59,12 @@ const FileUpload: React.FC<FileUploadProps> = ({
     }
   };
 
+  const handleUploadClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   const handlePreview = () => {
     setIsPreviewVisible(true);
   };
@@ -52,37 +75,48 @@ const FileUpload: React.FC<FileUploadProps> = ({
 
   const handleDelete = () => {
     setFileUrl("");
-    setFileUrl("");
     setIsPreviewVisible(false);
     onFileUpload(setlistIndex, trackId, loopId, null);
   };
 
   return (
-    <div style={{ color: "white", maxWidth: 216 }}>
-      <input
-        type="file"
-        accept="video/*, .pdf, .doc, .docx, .png, .jpg, .jpeg"
-        onChange={handleFileChange}
-      />
+    <div style={{ color: "white", maxWidth: 240 }}>
+      {!fileUrl && (
+        <Button
+          component="label"
+          role={undefined}
+          variant="outlined"
+          tabIndex={-1}
+          style={{ color: "#6366F1" }}
+          startIcon={<CloudUploadIcon />}
+        >
+          Upload file
+          <VisuallyHiddenInput
+            type="file"
+            accept="video/*, .pdf, .doc, .docx, .png, .jpg, .jpeg"
+            onChange={handleFileChange}
+            ref={fileInputRef}
+            style={{ display: "none" }}
+          />
+        </Button>
+      )}
       {fileUrl && (
-        <div>
-          <div className="flex justify-between m-3">
-            <div>
-              <button
-                className="focus:outline-none px-4 py-2 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900"
-                onClick={handlePreview}
-              >
-                Preview
-              </button>
-            </div>
-            <div>
-              <button
-                className="focus:outline-none py-2 text-white bg-rose-700 hover:bg-rose-800 focus:ring-4 focus:ring-rose-300 font-medium rounded-lg text-sm px-4 dark:bg-rose-600 dark:hover:bg-rose-700 dark:focus:ring-rose-900"
-                onClick={handleDelete}
-              >
-                Delete
-              </button>
-            </div>
+        <div className="flex justify-between gap-x-3">
+          <div>
+            <button
+              className="focus:outline-none px-2 py-1 text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm"
+              onClick={handlePreview}
+            >
+              Preview
+            </button>
+          </div>
+          <div>
+            <button
+              className="focus:outline-none  px-2 py-1 text-white bg-rose-700 hover:bg-rose-800 focus:ring-4 focus:ring-rose-300 font-medium rounded-lg text-sm"
+              onClick={handleDelete}
+            >
+              Delete File
+            </button>
           </div>
         </div>
       )}

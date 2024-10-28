@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Reorder } from "framer-motion";
 import { MdDragIndicator } from "react-icons/md";
-import { Button, TextField } from "@mui/material";
+import {
+  Button,
+  FormControlLabel,
+  FormGroup,
+  IconButton,
+  TextField,
+  Tooltip,
+} from "@mui/material";
 import { toast } from "react-toastify";
 import InitializedSetlists from "./initializedSetlists";
 import { Set, Track } from "../types/setlistTypes";
 import { v4 as uuidv4 } from "uuid";
 import FileUpload from "./fileUpload";
-
+import Checkbox from "@mui/material/Checkbox";
+import DeleteIcon from "@mui/icons-material/Delete";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 interface SonglistProps {
   setlistIndex: number;
 }
@@ -254,7 +264,7 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
   const currentSetlist = songs[setlistIndex] || [];
 
   return (
-    <div className="border-2 border-stone-950 px-3 rounded-xl my-3 py-3 bg-gray-400">
+    <div className="max-w-[1300px] mx-auto">
       {songs[setlistIndex] && (
         <Reorder.Group
           values={currentSetlist}
@@ -266,33 +276,54 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
         >
           {songs[setlistIndex]?.map((song, index) => (
             <Reorder.Item
-              initial={{ y: -70, opacity: 0 }}
+              initial={{ y: -100, opacity: 0 }}
               animate={{
                 y: 0,
-                opacity: 1,
-                // width: "100%",
+                opacity: song.isComplete ? 0.4 : 1,
               }}
               transition={{
                 type: "spring",
                 stiffness: 400,
-                damping: 80,
-                duration: 0.3,
-                delay: index * 0.1,
+                damping: 90,
+                duration: 0.4,
+                delay: index * 0.2,
                 ease: "easeIn",
               }}
               value={song}
-              style={song.isComplete ? { opacity: 0.4 } : { opacity: 1 }}
-              className="flex flex-col gap-2 mb-2 border border-stone-500 p-3 my-1 rounded-lg bg-stone-950 cursor-grab"
+              className="flex flex-col gap-2 mb-2 border border-stone-500 p-2 my-1 rounded-lg bg-stone-950 hover:bg-stone-900 cursor-grab"
               key={song.id}
             >
-              <div className="flex gap-3 items-center">
+              <div className="flex gap-3 items-center max-h-10">
                 <div className="flex gap-1 items-center">
                   <MdDragIndicator
-                    style={{ color: "#fff", fontSize: "40px" }}
+                    style={{ color: "#fff", fontSize: "50px" }}
                   />
-                  <h1 className="text-xl text-white">{index + 1}.)</h1>
+                  <h1
+                    style={{
+                      backgroundColor: "white",
+                      color: "black",
+                      borderRadius: "50%",
+                      width: "30px",
+                      height: "30px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                      border: "#6366F1 2px solid",
+                      padding: 0,
+                      fontSize: "16px",
+                      marginRight: "10px",
+                    }}
+                  >
+                    {index + 1}
+                  </h1>
+
                   <TextField
-                    style={{ background: "white" }}
+                    style={{
+                      background: "white",
+                      width: 200,
+                      borderRadius: "6px",
+                    }}
                     type="text"
                     value={song.title}
                     variant="standard"
@@ -303,64 +334,68 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
                   />
                 </div>
                 <div className="flex items-center justify-between w-full">
-                  <div
-                    style={
-                      song.isComplete
-                        ? { backgroundColor: "green" }
-                        : { color: "transparent" }
-                    }
-                    className="border border-green-600 rounded p-2 flex gap-3"
-                  >
-                    <h4 className="text-white">Complete</h4>
-                    <input
-                      type="checkbox"
-                      checked={song.isComplete}
-                      onChange={handleSongCompletion(index)}
-                      value={song.isComplete ? "true" : "false"}
+                  <FormGroup>
+                    <FormControlLabel
+                      style={{ color: "white" }}
+                      control={
+                        <Checkbox
+                          onChange={handleSongCompletion(index)}
+                          value={song.isComplete ? "true" : "false"}
+                          sx={{
+                            "& .MuiSvgIcon-root": {
+                              fontSize: 36,
+                              color: "#FFF",
+                            },
+                          }}
+                        />
+                      }
+                      label="Complete Song"
+                      color="success"
                     />
-                  </div>
-                  <div className="border border-red-600 rounded p-2 flex gap-3">
-                    <h4 className="text-white">Delete</h4>
-                    <button
-                      className="focus:outline-none text-white bg-rose-700 hover:bg-rose-800 focus:ring-4 focus:ring-rose-300 font-medium rounded-lg text-sm px-2"
+                  </FormGroup>
+                  <div className="rounded flex gap-3 mr-3">
+                    <Button
+                      color="error"
                       onClick={() => deleteSong(song.id)}
+                      variant="outlined"
+                      startIcon={<DeleteIcon />}
                     >
-                      &times;
-                    </button>
+                      Delete
+                    </Button>
                   </div>
                 </div>
               </div>
-              <div className="flex justify-around">
+              <div className="flex justify-evenly gap-2">
                 {showTracks &&
                   song.tracks.map((track, i) => (
                     <div
-                      className=" flex flex-col gap-1 border border-stone-300 p-[2px] rounded"
+                      className=" flex flex-col gap-1 border border-stone-300 rounded-md"
                       key={track.id}
                     >
-                      <h3>
-                        <div className="flex gap-1">
-                          <div className="text-white">{`TR${i + 1}`}</div>
-                          <input
-                            style={{ maxWidth: "200px" }}
-                            type="text"
-                            className="pl-1"
-                            placeholder={track.placeholder}
-                            value={track.title}
-                            onChange={(e) =>
-                              editTrack(song.id, track.id, {
-                                title: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-                      </h3>
+                      <div className="flex gap-1">
+                        <div className="text-white ml-1">{`TR${i + 1}`}</div>
+                        <input
+                          type="text"
+                          className="pl-1 rounded"
+                          placeholder={track.placeholder}
+                          value={track.title}
+                          onChange={(e) =>
+                            editTrack(song.id, track.id, {
+                              title: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+
                       {track.loops.map((loop) => (
-                        <div className="flex flex-col gap-1" key={loop.id}>
+                        <div
+                          className="flex flex-col gap-1 border-y-2 p-1 border-slate-600"
+                          key={loop.id}
+                        >
                           <div className="flex">
                             <input
-                              style={{ maxWidth: "190px" }}
                               type="text"
-                              className="pl-1"
+                              className="pl-1 rounded"
                               placeholder={loop.placeholder}
                               value={loop.title}
                               onChange={(e) =>
@@ -369,18 +404,20 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
                                 })
                               }
                             />
-                            <button
-                              className="focus:outline-none text-white bg-rose-700 hover:bg-rose-800 focus:ring-4 focus:ring-rose-300 font-medium rounded-lg text-sm px-2 dark:bg-rose-600 dark:hover:bg-rose-700 dark:focus:ring-rose-900"
-                              onClick={() => deleteLoop(loop.id)}
-                            >
-                              &times;
-                            </button>
+                            <Tooltip title="Remove Loop">
+                              <RemoveCircleIcon
+                                color="error"
+                                onClick={() => deleteLoop(loop.id)}
+                                style={{ cursor: "pointer" }}
+                              />
+                            </Tooltip>
                           </div>
                           <textarea
                             style={{ width: "auto" }}
+                            className="rounded"
                             rows={2}
-                            cols={20}
-                            placeholder="Enter Notes"
+                            cols={15}
+                            placeholder="Enter Notes..."
                             value={loop.notes}
                             onChange={(e) =>
                               editLoop(song.id, track.id, loop.id, {
@@ -388,23 +425,25 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
                               })
                             }
                           />
-                          <FileUpload
-                            setlistIndex={setlistIndex}
-                            trackId={track.id}
-                            loopId={loop.id}
-                            onFileUpload={updateLoopFile}
-                            savedFile={loop?.file}
-                          />
+
+                          <div className="flex justify-center gap-x-3 items-center">
+                            <FileUpload
+                              setlistIndex={setlistIndex}
+                              trackId={track.id}
+                              loopId={loop.id}
+                              onFileUpload={updateLoopFile}
+                              savedFile={loop?.file}
+                            />
+                            <Tooltip title="Add Loop">
+                              <AddBoxIcon
+                                style={{ color: "#10B981", cursor: "pointer" }}
+                                fontSize="large"
+                                onClick={handleAddLoop(track.id, index)}
+                              />
+                            </Tooltip>
+                          </div>
                         </div>
                       ))}
-                      {track.loops.length < 5 && (
-                        <button
-                          onClick={handleAddLoop(track.id, index)}
-                          className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900"
-                        >
-                          + Add loop
-                        </button>
-                      )}
                     </div>
                   ))}
               </div>
@@ -412,26 +451,31 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
           ))}
         </Reorder.Group>
       )}
-      <div className="flex justify-between mx-3">
-        <Button variant="contained" color="success" onClick={addNewSong}>
+      <div className="flex justify-between mx-3 bg-slate-800 rounded-lg p-2 font-medium ">
+        <button
+          className="focus:outline-none text-white px-3 rounded-lg text-sm bg-emerald-500 hover:bg-emerald-700 focus:ring-4 focus:ring-emerald-300"
+          onClick={addNewSong}
+        >
           + ADD NEW SONG
-        </Button>
-
+        </button>
         <div className="flex gap-8">
           <div className="rounded p-2 flex gap-3">
-            <h4 className="text-black">
+            <Button
+              style={{ color: "#fff" }}
+              variant="outlined"
+              onClick={() => setShowTracks(!showTracks)}
+            >
               {showTracks ? "Hide Tracks" : "Show Tracks"}
-            </h4>
-            <input
-              type="checkbox"
-              checked={!showTracks}
-              onChange={() => setShowTracks(!showTracks)}
-            />
+            </Button>
           </div>
-          <Button variant="contained" onClick={saveToLocalStorage}>
-            SAVE ALL
-          </Button>
         </div>
+        <Button
+          style={{ backgroundColor: "#6366F1" }}
+          variant="contained"
+          onClick={saveToLocalStorage}
+        >
+          SAVE ALL
+        </Button>
       </div>
     </div>
   );

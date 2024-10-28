@@ -3,7 +3,6 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import {
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
   SelectChangeEvent,
@@ -83,35 +82,38 @@ const EditableDropdown: React.FC<EditableDropdownProps> = ({
     <div className="flex">
       <div className="flex gap-3">
         {!isEditing && (
-          <div className="flex gap-2 items-center mt-[14px]">
+          <div className="flex gap-2 items-center">
             <button
-              className="focus:outline-none text-white bg-stone-700 hover:bg-stone-800 focus:ring-4 focus:ring-stone-300 font-lg rounded-lg text-md px-3 py-2"
+              className="focus:outline-none text-white bg-stone-700 hover:bg-stone-800 focus:ring-4 focus:ring-stone-300 font-lg rounded-lg text-md px-3 py-1"
               onClick={handleEdit}
             >
               Edit
             </button>
           </div>
         )}
-        <FormControl sx={{ width: 300 }}>
-          <InputLabel id="demo-simple-select-label">Setlist</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={setlistIndex}
-            label="Setlist 1"
-            onChange={handleSelectChange}
-          >
-            {options.map((option, index) => (
-              <MenuItem key={option.id} value={index}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        {!isEditing && (
+          <FormControl variant="standard" sx={{ width: 300 }} size="small">
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={setlistIndex}
+              label="Setlist 1"
+              onChange={handleSelectChange}
+            >
+              {options.map((option, index) => (
+                <MenuItem key={option.id} value={index}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
+
         <div>
           {isEditing && (
             <div className="flex gap-3 items-end">
               <TextField
+                size="small"
                 value={newLabel}
                 onChange={(e) => setNewLabel(e.target.value)}
                 inputRef={textFieldRef}
