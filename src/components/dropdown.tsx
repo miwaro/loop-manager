@@ -83,7 +83,7 @@ const EditableDropdown: React.FC<EditableDropdownProps> = ({
   };
 
   return (
-    <div className="flex">
+    <div className="flex m-auto">
       <div className="flex gap-3">
         {!isEditing && (
           <div className="flex gap-2 items-center">

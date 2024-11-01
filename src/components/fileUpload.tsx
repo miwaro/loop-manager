@@ -80,15 +80,20 @@ const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   return (
-    <div style={{ color: "white", maxWidth: 240 }}>
+    <div>
       {!fileUrl && (
         <Button
           component="label"
           role={undefined}
           variant="outlined"
           tabIndex={-1}
-          style={{ color: "#6366F1" }}
+          style={{
+            color: "#F3F4F6",
+            width: "100%",
+            backgroundColor: "#6366F1",
+          }}
           startIcon={<CloudUploadIcon />}
+          size="small"
         >
           Upload file
           <VisuallyHiddenInput
@@ -101,21 +106,21 @@ const FileUpload: React.FC<FileUploadProps> = ({
         </Button>
       )}
       {fileUrl && (
-        <div className="flex justify-between gap-x-3">
+        <div className="flex justify-between">
           <div>
             <button
-              className="focus:outline-none px-2 py-1 text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm"
+              className="focus:outline-none px-2 py-1 text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 font-medium rounded text-sm"
               onClick={handlePreview}
             >
-              Preview
+              PREVIEW FILE
             </button>
           </div>
           <div>
             <button
-              className="focus:outline-none  px-2 py-1 text-white bg-rose-700 hover:bg-rose-800 focus:ring-4 focus:ring-rose-300 font-medium rounded-lg text-sm"
+              className="focus:outline-none  px-2 py-1 text-white bg-rose-700 hover:bg-rose-800 focus:ring-4 focus:ring-rose-300 font-medium rounded text-sm"
               onClick={handleDelete}
             >
-              Delete File
+              DELETE FILE
             </button>
           </div>
         </div>
