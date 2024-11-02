@@ -19,6 +19,7 @@ const createTrack = (placeholder: string) => ({
 const createSong = () => ({
   id: uuidv4(),
   title: "",
+  notes: "",
   isComplete: false,
   tracks: [
     createTrack("Main Beat"),

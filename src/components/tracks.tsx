@@ -135,7 +135,7 @@ function Tracks({
                     </Tooltip>
                   )}
                 </div>
-                <Tooltip title="Add Notes">
+                <Tooltip title="Add Loop Notes">
                   <Button
                     component="label"
                     variant="outlined"
@@ -150,7 +150,7 @@ function Tracks({
                     }}
                     size="small"
                   >
-                    {showNotes[loop.id] ? "HIDE NOTES" : "SHOW NOTES"}
+                    {showNotes[loop.id] ? "HIDE NOTES" : "LOOP NOTES"}
                   </Button>
                 </Tooltip>
                 {showNotes[loop.id] && (
@@ -178,7 +178,7 @@ function Tracks({
                 <div className="flex justify-center gap-x-3 items-center">
                   {loopIndex === track.loops.length - 1 && (
                     <div className="w-full">
-                      <Tooltip title="Add Loop">
+                      <Tooltip title="Add New Loop to Track">
                         <Button
                           component="label"
                           variant="outlined"

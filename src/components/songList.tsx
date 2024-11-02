@@ -10,6 +10,7 @@ import Checkbox from "@mui/material/Checkbox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SetlistActions from "./setlistActions";
 import Tracks from "./tracks";
+import SongNotes from "@/modals/songNotes";
 
 interface SonglistProps {
   setlistIndex: number;
@@ -17,9 +18,7 @@ interface SonglistProps {
 const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
   const [songs, setSongs] = useState<Set[][]>(InitializedSetlists);
   const [showTracks, setShowTracks] = useState(true);
-  const [showSongNotes, setShowSongNotes] = useState<{
-    [key: string]: boolean;
-  }>({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const savedSongs = localStorage.getItem("songs");
@@ -97,6 +96,7 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
         {
           id: newId,
           title: "",
+          notes: "",
           isComplete: false,
           tracks: newTracks,
         },
@@ -192,6 +192,29 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
     );
   };
 
+  const handleSaveNote = (note: any, id: string) => {
+    const updatedSetlists = songs.map((setlist, setIndex) => {
+      if (setIndex === setlistIndex) {
+        return setlist.map((song) => {
+          if (song.id === id) {
+            return {
+              ...song,
+              notes: note,
+            };
+          }
+          return song;
+        });
+      }
+      return setlist;
+    });
+
+    setSongs(updatedSetlists);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   const updateLoopFile = (
     setId: number,
     trackId: string,
@@ -256,7 +279,7 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
 
   return (
     <div className="max-w-[1300px] mx-auto">
-      <div className=" mt-2 border-dotted border-2 border-emerald-600 rounded px-2">
+      <div className=" mt-2 border-dashed border-2 border-emerald-500 rounded px-2">
         {songs[setlistIndex] && (
           <Reorder.Group
             values={currentSetlist}
@@ -281,7 +304,7 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
                   delay: index * 0.1,
                 }}
                 value={song}
-                className="flex flex-col gap-2 mb-2 border border-stone-500 p-2 my-1 rounded-lg bg-stone-950 hover:bg-stone-900 cursor-grab"
+                className="flex flex-col gap-2 mb-2 border border-stone-500 p-2 my-1 rounded-lg bg-neutral-900 hover:bg-neutral-800 cursor-grab"
                 key={song.id}
               >
                 <div className="flex gap-3 items-center max-h-10">
@@ -311,6 +334,9 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
                         background: "white",
                         width: 200,
                         borderRadius: "6px",
+                        textDecoration: song.isComplete
+                          ? "line-through"
+                          : "none",
                       }}
                       type="text"
                       value={song.title}
@@ -321,29 +347,41 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
                       }
                     />
                   </div>
-                  <div className="flex items-center justify-between w-full">
-                    <FormGroup>
-                      <FormControlLabel
-                        style={{ color: "white" }}
-                        control={
-                          <Checkbox
-                            onChange={handleSongCompletion(index)}
-                            checked={song.isComplete}
-                            sx={{
-                              "& .MuiSvgIcon-root": {
-                                fontSize: 36,
-                                color: "#FFF",
-                              },
-                            }}
-                          />
-                        }
-                        label="Complete Song"
-                        color="success"
+                  <div className="flex items-center justify-between gap-3 w-full">
+                    <div className="flex items-center">
+                      <FormGroup>
+                        <FormControlLabel
+                          style={{ color: "#eff4f6" }}
+                          control={
+                            <Checkbox
+                              onChange={handleSongCompletion(index)}
+                              checked={song.isComplete}
+                              sx={{
+                                "& .MuiSvgIcon-root": {
+                                  color: "#eff4f6",
+                                },
+                              }}
+                            />
+                          }
+                          label="COMPLETE SONG"
+                          color="success"
+                        />
+                      </FormGroup>
+                      <SongNotes
+                        open={isModalOpen}
+                        handleClose={handleCloseModal}
+                        onSave={handleSaveNote}
+                        id={song.id}
+                        notes={song.notes}
                       />
-                    </FormGroup>
+                    </div>
+
                     <div className="rounded flex gap-3 mr-3">
                       <Button
-                        color="error"
+                        style={{
+                          color: "#A1A1AA",
+                          border: "#3F3F46 2px solid",
+                        }}
                         onClick={() => deleteSong(song.id)}
                         variant="outlined"
                         startIcon={<DeleteIcon />}

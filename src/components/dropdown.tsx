@@ -115,7 +115,7 @@ const EditableDropdown: React.FC<EditableDropdownProps> = ({
 
         <div>
           {isEditing && (
-            <div className="flex gap-3 items-end">
+            <div className="flex gap-2 items-end">
               <TextField
                 size="small"
                 value={newLabel}
@@ -125,15 +125,14 @@ const EditableDropdown: React.FC<EditableDropdownProps> = ({
               />
               <Button
                 variant="contained"
-                sx={{ height: 40, width: 120 }}
+                sx={{ height: 36, width: 85, background: "#4F46E5" }}
                 onClick={handleUpdate}
               >
                 Update
               </Button>
               <Button
-                color="error"
                 variant="contained"
-                sx={{ height: 40, width: 120 }}
+                sx={{ height: 36, width: 85, background: "#3F3F46" }}
                 onClick={() => setIsEditing(false)}
               >
                 Cancel

@@ -16,6 +16,7 @@ export interface Track {
 export interface Set {
   id: string;
   title: string;
+  notes: string;
   isComplete: boolean;
   tracks: Track[];
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, ChangeEvent } from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { Modal, Box } from "@mui/material";
+import { Modal, Box, Tooltip } from "@mui/material";
 import PreviewIcon from "@mui/icons-material/Preview";
 
 interface FileUploadProps {
@@ -82,28 +82,30 @@ const FileUpload: React.FC<FileUploadProps> = ({
   return (
     <div>
       {!fileUrl && (
-        <Button
-          component="label"
-          role={undefined}
-          variant="outlined"
-          tabIndex={-1}
-          style={{
-            color: "#F3F4F6",
-            width: "100%",
-            backgroundColor: "#6366F1",
-          }}
-          startIcon={<CloudUploadIcon />}
-          size="small"
-        >
-          Upload file
-          <VisuallyHiddenInput
-            type="file"
-            accept="video/*, .pdf, .doc, .docx, .png, .jpg, .jpeg"
-            onChange={handleFileChange}
-            ref={fileInputRef}
-            style={{ display: "none" }}
-          />
-        </Button>
+        <Tooltip title="Upload Tabs, Lyrics, or Video">
+          <Button
+            component="label"
+            role={undefined}
+            variant="outlined"
+            tabIndex={-1}
+            style={{
+              color: "#F3F4F6",
+              width: "100%",
+              backgroundColor: "#6366F1",
+            }}
+            startIcon={<CloudUploadIcon />}
+            size="small"
+          >
+            Upload file
+            <VisuallyHiddenInput
+              type="file"
+              accept="video/*, .pdf, .doc, .docx, .png, .jpg, .jpeg"
+              onChange={handleFileChange}
+              ref={fileInputRef}
+              style={{ display: "none" }}
+            />
+          </Button>
+        </Tooltip>
       )}
       {fileUrl && (
         <div className="flex justify-between">

@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import React from "react";
 
 interface SetlistActionsProps {
@@ -15,7 +15,7 @@ const SetlistActions: React.FC<SetlistActionsProps> = ({
   saveToLocalStorage,
 }) => {
   return (
-    <div className="flex justify-between gap-20 md:gap-60 bg-slate-800 rounded-lg p-1 md:p-2 font-small md:font-medium max-w-[1300px] mx-auto mt-2">
+    <div className="flex justify-between gap-20 md:gap-60 bg-stone-200 border border-stone-500 rounded-lg p-1 md:p-2 font-small md:font-medium max-w-[1300px] mx-auto mt-2">
       <div>
         <Button
           style={{ backgroundColor: "#10B981", color: "#fff" }}
@@ -27,20 +27,21 @@ const SetlistActions: React.FC<SetlistActionsProps> = ({
 
       <div className="flex gap-8">
         <Button
-          style={{ color: "#fff" }}
+          style={{ color: "#0C0A09" }}
           variant="outlined"
           onClick={() => setShowTracks(!showTracks)}
         >
           {showTracks ? "Hide Tracks" : "Show Tracks"}
         </Button>
-
-        <Button
-          style={{ backgroundColor: "#6366F1" }}
-          variant="contained"
-          onClick={saveToLocalStorage}
-        >
-          SAVE ALL
-        </Button>
+        <Tooltip title="Saves all data to local storage">
+          <Button
+            style={{ backgroundColor: "#6366F1" }}
+            variant="contained"
+            onClick={saveToLocalStorage}
+          >
+            SAVE ALL
+          </Button>
+        </Tooltip>
       </div>
     </div>
   );
