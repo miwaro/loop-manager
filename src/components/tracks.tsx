@@ -143,7 +143,7 @@ function Tracks({
                     startIcon={<NotesIcon />}
                     onClick={() => toggleNotes(loop.id)}
                     style={{
-                      backgroundColor: "#B45309",
+                      backgroundColor: "#A8A29E",
                       cursor: "pointer",
                       color: "#F3F4F6",
                       width: "100%",

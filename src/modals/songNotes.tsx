@@ -18,21 +18,28 @@ interface AddNoteModalProps {
   onSave: (note: string, id: string) => void;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   modalStyle: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
+    position: "fixed",
+    top: 0,
+    right: 0,
+    height: "100%",
     width: 400,
     backgroundColor: "white",
-    borderRadius: 8,
-    p: 4,
-    outline: "none",
+    borderRadius: "8px 0 0 8px",
     padding: 16,
+    boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
+    outline: "none",
+    overflowY: "auto",
+    display: "flex",
+    flexDirection: "column",
+  },
+  textFieldContainer: {
+    flexGrow: 1,
+    marginTop: 16,
   },
   buttonGroup: {
-    marginTop: 16,
+    margin: 12,
     display: "flex",
     justifyContent: "space-between",
   },
@@ -54,6 +61,7 @@ const SongNotes: React.FC<AddNoteModalProps> = ({ id, notes, onSave }) => {
 
   const handleSave = () => {
     onSave(note, id);
+    handleClose();
   };
 
   return (
@@ -79,23 +87,48 @@ const SongNotes: React.FC<AddNoteModalProps> = ({ id, notes, onSave }) => {
       <Modal open={open} onClose={handleClose}>
         <Box className={classes.modalStyle}>
           <Typography variant="h6" component="h2" gutterBottom>
-            Add a Note for the Song
+            Add a Note <span className="text-sm">(lyrics, key, bpm, etc.)</span>
           </Typography>
-          <TextField
-            fullWidth
-            label="Your Note"
-            variant="outlined"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            multiline
-            rows={4}
-          />
+
+          <Box className={classes.textFieldContainer}>
+            <TextField
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#aeaeae",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#4F46E5",
+                  },
+                  "& .MuiInputBase-input": {
+                    fontSize: "1.25rem",
+                  },
+                },
+              }}
+              fullWidth
+              variant="outlined"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              multiline
+              rows={32}
+              style={{ height: "100%" }}
+            />
+          </Box>
+
           <Box className={classes.buttonGroup}>
-            <Button variant="contained" color="primary" onClick={handleSave}>
-              Save Note
-            </Button>
-            <Button variant="outlined" onClick={handleClose}>
+            <Button
+              style={{ color: "white", backgroundColor: "#57534E" }}
+              variant="outlined"
+              onClick={handleClose}
+            >
               Cancel
+            </Button>
+            <Button
+              style={{ color: "white", backgroundColor: "#4F46E5" }}
+              variant="contained"
+              onClick={handleSave}
+            >
+              Save Note
             </Button>
           </Box>
         </Box>
