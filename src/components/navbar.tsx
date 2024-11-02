@@ -16,7 +16,7 @@ const Navbar: React.FC<EditableDropdownProps> = ({
   return (
     <div className="flex flex-col sm:flex-row justify-center gap-0 md:gap-80 items-end mt-3 mb-1 mx-0 sm:mx-1">
       <div className="flex flex-col m-auto sm:m-0 sm:flex-row items-end">
-        <h1 className="font-rock3d text-4xl sm:mb-0  p-2 font-semibold bg-emerald-500 rounded-md border-4 border-indigo-500">
+        <h1 className="font-rock3d text-4xl sm:mb-0 text-stone-800 px-3 py-1 font-semibold bg-emerald-500 rounded-full border-2 border-indigo-500">
           Loop-List
         </h1>
         <div className="flex">

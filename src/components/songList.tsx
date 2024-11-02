@@ -364,6 +364,11 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
                             />
                           }
                           label="COMPLETE SONG"
+                          sx={{
+                            "& .MuiTypography-root": {
+                              fontSize: "0.9rem",
+                            },
+                          }}
                           color="success"
                         />
                       </FormGroup>
