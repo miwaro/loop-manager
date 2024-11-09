@@ -278,7 +278,7 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
   const currentSetlist = songs[setlistIndex] || [];
 
   return (
-    <div className="max-w-[1300px] mx-auto">
+    <div className="max-w-[1300px] mx-auto mt-8">
       <div className=" mt-2 border-dashed border-2 border-emerald-500 rounded px-2">
         {songs[setlistIndex] && (
           <Reorder.Group
@@ -304,7 +304,7 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
                   delay: index * 0.1,
                 }}
                 value={song}
-                className="flex flex-col gap-2 mb-2 border border-stone-500 p-2 my-1 rounded-lg bg-neutral-900 hover:bg-neutral-800 cursor-grab"
+                className="flex flex-col gap-2 mb-2 border border-stone-500 p-2 my-1 rounded-lg bg-neutral-900 cursor-grab active:cursor-grabbing"
                 key={song.id}
               >
                 <div className="flex gap-3 items-center max-h-10">
@@ -412,12 +412,14 @@ const SongList: React.FC<SonglistProps> = ({ setlistIndex }) => {
           </Reorder.Group>
         )}
       </div>
-      <SetlistActions
-        addNewSong={addNewSong}
-        showTracks={showTracks}
-        setShowTracks={setShowTracks}
-        saveToLocalStorage={saveToLocalStorage}
-      />
+      <div className="shadow hover:shadow-lg">
+        <SetlistActions
+          addNewSong={addNewSong}
+          showTracks={showTracks}
+          setShowTracks={setShowTracks}
+          saveToLocalStorage={saveToLocalStorage}
+        />
+      </div>
     </div>
   );
 };

@@ -66,7 +66,7 @@ const SongNotes: React.FC<AddNoteModalProps> = ({ id, notes, onSave }) => {
 
   return (
     <>
-      <Tooltip title="Add Notes">
+      <Tooltip title="Add Notes" placement="right-start">
         <Button
           component="label"
           variant="outlined"

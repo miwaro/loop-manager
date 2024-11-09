@@ -1,5 +1,6 @@
 import { Button, Tooltip } from "@mui/material";
 import React from "react";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 
 interface SetlistActionsProps {
   addNewSong: () => void;
@@ -15,13 +16,14 @@ const SetlistActions: React.FC<SetlistActionsProps> = ({
   saveToLocalStorage,
 }) => {
   return (
-    <div className="flex justify-between gap-20 md:gap-60 bg-stone-200 border border-stone-500 rounded-lg p-1 md:p-2 font-small md:font-medium max-w-[1300px] mx-auto mt-2">
+    <div className="flex justify-between gap-20 md:gap-60 bg-stone-200 border-2 border-stone-500 rounded-lg p-1 md:p-2 font-small md:font-medium max-w-[1300px] mx-auto mt-4 mb-12">
       <div>
         <Button
+          startIcon={<AddBoxIcon />}
           style={{ backgroundColor: "#10B981", color: "#fff" }}
           onClick={addNewSong}
         >
-          + ADD NEW SONG
+          ADD NEW SONG TO SETLIST
         </Button>
       </div>
 
@@ -31,7 +33,7 @@ const SetlistActions: React.FC<SetlistActionsProps> = ({
           variant="outlined"
           onClick={() => setShowTracks(!showTracks)}
         >
-          {showTracks ? "Hide Tracks" : "Show Tracks"}
+          {showTracks ? "Hide All Tracks" : "Show Tracks"}
         </Button>
         <Tooltip title="Saves all data to local storage">
           <Button
